@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+html,
+body {
+  height: 100vh;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+
+@layer base {
+  :root {
+  /* Name: custom color palette
+     Author: Ilias Ism
+     URL: https://gradient.page */
+
+  /* CSS: .bg-gradient { background: var(--gradient) } */
+  --gradient: #A8BFFF;
+
+  --background: 238 65% 6.64%;
+  --foreground: 238 10% 99.15%;
+
+  --muted: 238 50% 24.9%;
+  --muted-foreground: 238 10% 58.3%;
+
+  --popover: 238 45% 10.79%;
+  --popover-foreground: 238 10% 99.15%;
+
+  --card: 238 45% 10.79%;
+  --card-foreground: 238 10% 99.15%;
+
+  --border: 238 50% 24.9%;
+  --input: 238 50% 24.9%;
+
+  --primary: 238 100% 83%;
+  --primary-foreground: 238 10% 8.299999999999999%;
+
+  --secondary: 238 50% 24.9%;
+  --secondary-foreground: 238 10% 99.15%;
+
+  --accent: 238 50% 24.9%;
+  --accent-foreground: 238 10% 99.15%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 238 10% 99.15%;
+
+  --ring: 238 100% 83%;
+  }
+
+  .dark {
+  /* Name: custom color palette
+     Author: Ilias Ism
+     URL: https://gradient.page */
+
+  /* CSS: .bg-gradient { background: var(--gradient) } */
+  --gradient: #A8BFFF;
+
+  --background: 238 65% 6.64%;
+  --foreground: 238 10% 99.15%;
+
+  --muted: 238 50% 24.9%;
+  --muted-foreground: 238 10% 58.3%;
+
+  --popover: 238 45% 10.79%;
+  --popover-foreground: 238 10% 99.15%;
+
+  --card: 238 45% 10.79%;
+  --card-foreground: 238 10% 99.15%;
+
+  --border: 238 50% 24.9%;
+  --input: 238 50% 24.9%;
+
+  --primary: 238 100% 83%;
+  --primary-foreground: 238 10% 8.299999999999999%;
+
+  --secondary: 238 50% 24.9%;
+  --secondary-foreground: 238 10% 99.15%;
+
+  --accent: 238 50% 24.9%;
+  --accent-foreground: 238 10% 99.15%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 238 10% 99.15%;
+
+  --ring: 238 100% 83%;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground rounded-full;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-muted rounded-full;
+  }
+
+}

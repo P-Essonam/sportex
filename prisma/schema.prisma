@@ -1,0 +1,184 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum UserRole {
+  ADMIN
+  COACH
+  GUEST
+}
+
+enum STATUS {
+  DONE
+  INPROGRESS
+  PENDING
+}
+
+
+enum CustomerStatus {
+  ACTIVE 
+  INACTIVE
+}
+
+
+model User {
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  emailVerified   DateTime?
+  password        String?
+  image           String?   @db.Text
+  currentSpeciality String?
+  role            UserRole  @default(COACH)
+
+  lastLogin DateTime? @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  Coach        Coach?
+  Customer     Customer?
+  Accounts     Account[]
+}
+
+model Speciality {
+  id       String  @id @default(cuid())
+  name     String
+  logo     String     @db.Text
+  goal     Int        @default(5)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  coachId     String
+  Coach       Coach   @relation(fields: [coachId], references: [id], onDelete: Cascade)
+  Customer      Customer[]
+}
+
+model Coach {
+  id              String  @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+
+  Speciality      Speciality[]
+  userId  String   @unique
+  User    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Customer {
+  id          String    @id @default(cuid())
+  sex         String
+  age         Int
+  background  String    @db.Text
+  weight      Int
+  size        Float    
+  status      CustomerStatus    @default(ACTIVE)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  Speciality       Speciality[]
+  Program          Program[]
+  userId  String   @unique
+  User    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+
+model Program {
+  id          String    @id @default(cuid())
+  title       String
+  description String    @db.Text
+  start       DateTime
+  end         DateTime
+  status      STATUS    @default(PENDING)
+  price        Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  customerId    String
+  Customer      Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  ProgramGoals ProgramGoals[]
+}
+
+
+model ProgramGoals {
+  id             String   @id @default(cuid())
+  description    String   @db.Text
+  start          DateTime
+  end            DateTime
+  position       Int
+  status         STATUS    @default(PENDING)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  ProgramId      String
+  Program        Program  @relation(fields: [ProgramId], references: [id], onDelete: Cascade)
+  Seance         Seance[]
+}
+
+
+model Seance {
+  id     String       @id @default(cuid())
+  date   DateTime     @unique
+  time   String
+  status STATUS       @default(PENDING)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+
+  ProgramGoalsId String
+  ProgramGoals   ProgramGoals @relation(fields: [ProgramGoalsId], references: [id], onDelete: Cascade)
+}
+
+
+
+
+
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
